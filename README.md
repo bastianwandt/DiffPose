@@ -1,145 +1,97 @@
-<img src="./denoising-diffusion.png" width="500px"></img>
+# DiffPose: Multi-hypothesis Human Pose Estimation using Diffusion Models (ICCV2023)
+### Authors:
+<a href="https://scholar.google.se/citations?user=Q2AY_q4AAAAJ&hl=sv&oi=ao">Karl Holmquist</a>
 
-## Denoising Diffusion Probabilistic Model, in Pytorch
+<a href="https://scholar.google.se/citations?user=z4aXEBYAAAAJ&hl=sv&oi=ao">Bastian Wandt</a>
 
-Implementation of <a href="https://arxiv.org/abs/2006.11239">Denoising Diffusion Probabilistic Model</a> in Pytorch. It is a new approach to generative modeling that may <a href="https://ajolicoeur.wordpress.com/the-new-contender-to-gans-score-matching-with-langevin-sampling/">have the potential</a> to rival GANs. It uses denoising score matching to estimate the gradient of the data distribution, followed by Langevin sampling to sample from the true distribution.
 
-This implementation was transcribed from the official Tensorflow version <a href="https://github.com/hojonathanho/diffusion">here</a>
+## Overview:
+This repository contains the code and some pre-trained models for our diffusion-based multi-hypothesis 3D human pose estimation method.
 
-Youtube AI Educators - <a href="https://www.youtube.com/watch?v=W-O7AZNzbzQ">Yannic Kilcher</a> | <a href="https://www.youtube.com/watch?v=344w5h24-h8">AI Coffeebreak with Letitia</a> | <a href="https://www.youtube.com/watch?v=HoKDTa5jHvg">Outlier</a>
 
-<a href="https://huggingface.co/blog/annotated-diffusion">Annotated code</a> by Research Scientists / Engineers from <a href="https://huggingface.co/">🤗 Huggingface</a>
 
-<img src="./sample.png" width="500px"><img>
+## Abstract:
+Traditionally, monocular 3D human pose estimation employs a machine learning model to predict the most likely 3D pose for a given input image. 
+However, a single image can be highly ambiguous and induces multiple plausible solutions for the 2D-3D lifting step, which results in overly confident 3D pose predictors. 
+To this end, we propose DiffPose, a conditional diffusion model that predicts multiple hypotheses for a given input image. 
+Compared to similar approaches, our diffusion model is straightforward and avoids intensive hyperparameter tuning, complex network structures, mode collapse, and unstable training.
 
-[![PyPI version](https://badge.fury.io/py/denoising-diffusion-pytorch.svg)](https://badge.fury.io/py/denoising-diffusion-pytorch)
+Moreover, we tackle the problem of over-simplification of the intermediate representation of the common two-step approaches which first estimate a distribution of 2D joint locations via joint-wise heatmaps and consecutively use their maximum argument for the 3D pose estimation step. 
+Since such a simplification of the heatmaps removes valid information about possibly correct, though labeled unlikely, joint locations, we propose to represent the heatmaps as a set of 2D joint candidate samples. 
+To extract information about the original distribution from these samples, we introduce our embedding transformer which conditions the diffusion model. 
 
-## Install
+Experimentally, we show that DiffPose improves upon the state of the art for multi-hypothesis pose estimation by 3-5% for simple poses and outperforms it by a large margin for highly ambiguous poses.
 
-```bash
-$ pip install denoising_diffusion_pytorch
+
+<img src="./Images/Teaser.png" width="500px"></img>
+
+
+
+### Paper:
+Paper accepted for oral presentation at ICCV2023 in Paris, updated version of the paper will be linked afterwards.
+
+### Affiliation:
+Computer Vision Laboratories (CVL) at Linköping University, Sweden
+
+
+## Installation
+We recommend creating a clean [conda](https://docs.conda.io/) environment. You can do this as follows:
+```
+conda env create -f environment.yml
+```
+
+After the installation is complete, you can activate the conda environment by running:
+```
+conda activate DiffPose
 ```
 
 ## Usage
+Observer that some plotting functionalities can be limited without a wandb account, please use '--do_not_use_wandb' in this case.
 
-```python
-import torch
-from denoising_diffusion_pytorch import Unet, GaussianDiffusion
-
-model = Unet(
-    dim = 64,
-    dim_mults = (1, 2, 4, 8)
-)
-
-diffusion = GaussianDiffusion(
-    model,
-    image_size = 128,
-    timesteps = 1000,   # number of steps
-    loss_type = 'l1'    # L1 or L2
-)
-
-training_images = torch.randn(8, 3, 128, 128) # images are normalized from 0 to 1
-loss = diffusion(training_images)
-loss.backward()
-# after a lot of training
-
-sampled_images = diffusion.sample(batch_size = 4)
-sampled_images.shape # (4, 3, 128, 128)
+### Training
+Our main experiments can be trained using: 
+```
+python train.py --config diffpose.yaml --seed 42
 ```
 
-Or, if you simply want to pass in a folder name and the desired image dimensions, you can use the `Trainer` class to easily train a model.
+For the other experiments their respective config files can be found at [experiments/iccv2023](experiments/iccv2023). And the used random seeds in [experiments/random_seeds.txt](experiments/random_seeds.txt)
 
-```python
-from denoising_diffusion_pytorch import Unet, GaussianDiffusion, Trainer
 
-model = Unet(
-    dim = 64,
-    dim_mults = (1, 2, 4, 8)
-).cuda()
 
-diffusion = GaussianDiffusion(
-    model,
-    image_size = 128,
-    timesteps = 1000,   # number of steps
-    loss_type = 'l1'    # L1 or L2
-).cuda()
-
-trainer = Trainer(
-    diffusion,
-    'path/to/your/images',
-    train_batch_size = 32,
-    train_lr = 1e-4,
-    train_num_steps = 700000,         # total training steps
-    gradient_accumulate_every = 2,    # gradient accumulation steps
-    ema_decay = 0.995,                # exponential moving average decay
-    amp = True                        # turn on mixed precision
-)
-
-trainer.train()
+### Evaluation
+To evaluate the code separately from training: 
+```
+python eval.py --config diffpose.yaml
 ```
 
-Samples and model checkpoints will be logged to `./results` periodically
+### Demo
+We provide demo functionalities in the [demo folder](demo/inference.py) for running inference of a trained model on a given image. Observe that the images are scaled to 255x255, to improve performance, make sure that most of the images consists of the person in question and not background.
+The 2D detector will also struggle if multiple persons are in the frame, leading to sub-optimal performance of our method.
 
-## Citations
 
-```bibtex
-@inproceedings{NEURIPS2020_4c5bcfec,
-    author      = {Ho, Jonathan and Jain, Ajay and Abbeel, Pieter},
-    booktitle   = {Advances in Neural Information Processing Systems},
-    editor      = {H. Larochelle and M. Ranzato and R. Hadsell and M.F. Balcan and H. Lin},
-    pages       = {6840--6851},
-    publisher   = {Curran Associates, Inc.},
-    title       = {Denoising Diffusion Probabilistic Models},
-    url         = {https://proceedings.neurips.cc/paper/2020/file/4c5bcfec8584af0d967f1ab10179ca4b-Paper.pdf},
-    volume      = {33},
-    year        = {2020}
-}
-```
 
-```bibtex
-@InProceedings{pmlr-v139-nichol21a,
-    title       = {Improved Denoising Diffusion Probabilistic Models},
-    author      = {Nichol, Alexander Quinn and Dhariwal, Prafulla},
-    booktitle   = {Proceedings of the 38th International Conference on Machine Learning},
-    pages       = {8162--8171},
-    year        = {2021},
-    editor      = {Meila, Marina and Zhang, Tong},
-    volume      = {139},
-    series      = {Proceedings of Machine Learning Research},
-    month       = {18--24 Jul},
-    publisher   = {PMLR},
-    pdf         = {http://proceedings.mlr.press/v139/nichol21a/nichol21a.pdf},
-    url         = {https://proceedings.mlr.press/v139/nichol21a.html},
-}
-```
+## Pre-trained 2D detector
+This repository contains both the fine-tuned network weights used by <a href="https://github.com/twehrbein/Probabilistic-Monocular-3D-Human-Pose-Estimation-with-Normalizing-Flows">Wehrbein et.al.</a>  and the non-finetuned weights it was based on from <a href="https://github.com/HRNet/HRNet-Human-Pose-Estimation">HRNet</a>.
 
-```bibtex
-@inproceedings{kingma2021on,
-    title       = {On Density Estimation with Diffusion Models},
-    author      = {Diederik P Kingma and Tim Salimans and Ben Poole and Jonathan Ho},
-    booktitle   = {Advances in Neural Information Processing Systems},
-    editor      = {A. Beygelzimer and Y. Dauphin and P. Liang and J. Wortman Vaughan},
-    year        = {2021},
-    url         = {https://openreview.net/forum?id=2LdBqxc1Yv}
-}
-```
+The '--use_orig_hrnet' flag used when preprocessing the datasets, selects the non-finetuned weights when used.
 
-```bibtex
-@article{Choi2022PerceptionPT,
-    title   = {Perception Prioritized Training of Diffusion Models},
-    author  = {Jooyoung Choi and Jungbeom Lee and Chaehun Shin and Sungwon Kim and Hyunwoo J. Kim and Sung-Hoon Yoon},
-    journal = {ArXiv},
-    year    = {2022},
-    volume  = {abs/2204.00227}
-}
-```
 
-```bibtex
-@article{Karras2022ElucidatingTD,
-    title   = {Elucidating the Design Space of Diffusion-Based Generative Models},
-    author  = {Tero Karras and Miika Aittala and Timo Aila and Samuli Laine},
-    journal = {ArXiv},
-    year    = {2022},
-    volume  = {abs/2206.00364}
-}
-```
+
+## Datasets
+
+### Human3.6m
+We provide tools for preprocessing the Human3.6M dataset, creating both the full split and the harder set of ambiguous samples proposed by <a href="https://github.com/twehrbein/Probabilistic-Monocular-3D-Human-Pose-Estimation-with-Normalizing-Flows">Wehrbein et.al.</a> in data/preprocessing/H36M.py.
+
+Please note that due to licensing of the original dataset we cannot provide you with the data, neither can we help with getting access to it excepting for directing you towards the official website: <a href="http://vision.imar.ro/human3.6m/description.php">Human 3.6M</a>
+
+### MPI-INF-3DHP
+Similarly, we provide preprocessing tools for <a href="https://vcai.mpi-inf.mpg.de/3dhp-dataset/">3DHP</a> in data/preprocessing/3DHP.py.
+
+
+
+
+
+## Acknowledgements:
+Thanks to this <a href="https://github.com/lucidrains/denoising-diffusion-pytorch">great repo</a> which served as a starting point for the implementation of the diffusion model used in this work.
+
+

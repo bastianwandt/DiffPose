@@ -1,3 +1,8 @@
+"""
+Part of this code has been modified from: 
+https://github.com/lucidrains/denoising-diffusion-pytorch
+"""
+
 import torch
 import torch.nn as nn
 import numpy as np
