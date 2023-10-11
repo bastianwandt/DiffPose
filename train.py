@@ -7,7 +7,7 @@ from models.trainer import Trainer
 from models.diffusion import GaussianDiffusion
 from models.denoiser import get_denoiser
 from models.condition_embedding import get_condition_embedding
-from data.data_h36m import H36MDataset, H36MDatasetH5, PW3DDatasetH5
+from data.dataset import H36MDatasetH5, PW3DDatasetH5
 from experiments.default import get_config_file
 
 
