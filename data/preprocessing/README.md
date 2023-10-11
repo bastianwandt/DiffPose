@@ -25,7 +25,7 @@ The following describes what should be done in order to be able to generate new 
 - Make sure that the H36M dataset has been downloaded and extracted (I.e. using download_all, extract_all from https://github.com/anibali/h36m-fetch)
 - Modify the "DATA_DIR" and the "OUTPUT_DIR" variables in "hrnet/mpii_hrnet_w32_255x255.yaml" accordingly
 - (Optinal) Modify skip_frames in pose_detection.py if the number of frames to skip shouldn't be 16
-- Make sure all dependencies are installed and run pose_detection.py from this directory
+- Make sure all dependencies are installed and run H36M.py from this directory (for the Human 3.6M dataset, other datasets are named similarly)
 
 ### Troubleshooting guide
 - Make sure that "git lfs" is available and installed, otherwise the network weights will be an empty file. 
