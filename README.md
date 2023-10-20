@@ -77,6 +77,25 @@ This repository contains both the fine-tuned network weights used by <a href="ht
 
 The '--use_orig_hrnet' flag used when preprocessing the datasets, selects the non-finetuned weights when used.
 
+## Pre-trained model weights
+The pre-trained 2D detector weights and the five models trained on H36M can be found on <a href="https://drive.google.com/drive/folders/1C182piD21B6fG5Aksl0ryT97zxQQdS0u?usp=share_link">Google Drive</a>
+
+### Trained Model Weights for DiffPose
+These are the model weights for the 5 different seeds used for evaluating our method
+| 2D Detector used | Random Seed for Diffpose | PA-MPJPE on H36M | PA-MPJPE on H36MA | Link to Model weight |
+| ---------------- | ------------------------ | ---------------- | ----------------- | -------------------- |
+| Fine-tuned H36M  |   42                     | 30.526           | 46.116            | <a href="https://drive.google.com/drive/folders/1FCPUUOoOgiW3maZDHid5JIlIpdyLxsIf?usp=sharing">Seed 42</a> |
+| Fine-tuned H36M  | 2967                     | 30.618           | 46.661            | <a href="https://drive.google.com/drive/folders/15_O1T0RLN78Gq_DZlBiNOtJD1cbn8Lop?usp=sharing">Seed 2967</a> |
+| Fine-tuned H36M  | 6173                     | 30.745           | 46.808            | <a href="https://drive.google.com/drive/folders/1r4UJCKDo-eA-RSo2g5IMgfl_fsUE_c7L?usp=sharing">Seed 6173</a> |
+| Fine-tuned H36M  | 5478                     | 30.964           | 46.813            | <a href="https://drive.google.com/drive/folders/1I2EA79iocnm6j4xVEgEmCLz0Y_0N6UEC?usp=sharing">Seed 5478</a> |
+| Fine-tuned H36M  |  989                     | 31.028           | 47.134            | <a href="https://drive.google.com/drive/folders/1cH32KuRXfp51VesbrF6dx7Lr-gicwhQl?usp=sharing">Seed 989</a> |
+
+### Model Weights for 2D joint detector
+These are the model weights for the original model as well as the ones that have been fine-tuned on the 2D data from H36M. 
+| Training Data | Link to Model weight |
+| ----------- | -------------------- |
+| Oiginal weights (MPII w/o finetuning) | <a href="https://drive.google.com/file/d/1XUy8v-OtiGP9SGITalrNNARRgyzif6SW/view?usp=sharing">Fined Tuned </a> |
+| MPII w/ Fine-tuning on H36M (as previous methods) | <a href="https://drive.google.com/file/d/1b8ukMD0abRzIkMcGE_sFiBE8j7FJefHH/view?usp=sharing">Original </a> |
 
 
 ## Datasets
