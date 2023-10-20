@@ -94,9 +94,10 @@ These are the model weights for the 5 different seeds used for evaluating our me
 These are the model weights for the original model as well as the ones that have been fine-tuned on the 2D data from H36M. 
 | Training Data | Link to Model weight |
 | ----------- | -------------------- |
-| Oiginal weights (MPII w/o finetuning) | <a href="https://drive.google.com/file/d/1XUy8v-OtiGP9SGITalrNNARRgyzif6SW/view?usp=sharing">Fined Tuned </a> |
-| MPII w/ Fine-tuning on H36M (as previous methods) | <a href="https://drive.google.com/file/d/1b8ukMD0abRzIkMcGE_sFiBE8j7FJefHH/view?usp=sharing">Original </a> |
+| Oiginal weights (MPII w/o finetuning) | <a href="https://drive.google.com/file/d/1XUy8v-OtiGP9SGITalrNNARRgyzif6SW/view?usp=sharing">Original </a> |
+| MPII w/ Fine-tuning on H36M (as previous methods) | <a href="https://drive.google.com/file/d/1b8ukMD0abRzIkMcGE_sFiBE8j7FJefHH/view?usp=sharing">Fined Tuned </a> |
 
+For generating the dataset, please download the weights for the 2D joint detector and place them in [data/preprocessing/hrnet](data/preprocessing/hrnet).
 
 ## Datasets
 
