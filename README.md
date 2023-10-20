@@ -4,6 +4,7 @@
 
 <a href="https://scholar.google.se/citations?user=z4aXEBYAAAAJ&hl=sv&oi=ao">Bastian Wandt</a>
 
+<a href="https://openaccess.thecvf.com/content/ICCV2023/html/Holmquist_DiffPose_Multi-hypothesis_Human_Pose_Estimation_using_Diffusion_Models_ICCV_2023_paper.html">Paper</a>
 
 ## Overview:
 This repository contains the code and some pre-trained models for our diffusion-based multi-hypothesis 3D human pose estimation method.
@@ -28,7 +29,8 @@ Experimentally, we show that DiffPose improves upon the state of the art for mul
 
 
 ### Paper:
-Paper accepted for oral presentation at ICCV2023 in Paris, updated version of the paper will be linked afterwards.
+Paper accepted for oral presentation at ICCV2023 in Paris and can be found here <a href="https://openaccess.thecvf.com/content/ICCV2023/html/Holmquist_DiffPose_Multi-hypothesis_Human_Pose_Estimation_using_Diffusion_Models_ICCV_2023_paper.html">DiffPose</a>
+
 
 ### Affiliation:
 Computer Vision Laboratories (CVL) at Linköping University, Sweden
